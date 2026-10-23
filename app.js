@@ -4,6 +4,8 @@ let selectedLetter='';
 let currentPage=1;
 const q=document.getElementById('q');
 const results=document.getElementById('results');
+const archiveResults=document.getElementById('archive-results');
+const welcome=document.getElementById('welcome');
 const summary=document.getElementById('summary');
 const alphabet=document.getElementById('alphabet');
 const pagination=document.getElementById('pagination');
@@ -32,6 +34,9 @@ function makeExcerpt(a,term){
 }
 function render(){
  const term=q.value.trim().toLocaleLowerCase();
+ const browsing=Boolean(term||selectedLetter);
+ archiveResults.hidden=!browsing;
+ welcome.hidden=browsing;
  let found=articles.filter(a=>{
   if(selectedLetter&&firstLetter(a)!==selectedLetter)return false;
   if(!term)return true;
@@ -41,7 +46,7 @@ function render(){
  const total=found.length; const pages=Math.max(1,Math.ceil(total/PAGE_SIZE)); currentPage=Math.min(currentPage,pages);
  const start=(currentPage-1)*PAGE_SIZE; const visible=found.slice(start,start+PAGE_SIZE);
  let descriptor=term?'matching document':selectedLetter?`title beginning with ${selectedLetter}`:'document';
- summary.textContent=`${total} ${descriptor}${total===1?'':'s'}${term||selectedLetter?'':' in the archive'}${total?` · Showing ${start+1}–${Math.min(start+PAGE_SIZE,total)}`:''}`;
+ summary.textContent=`${total} ${descriptor}${total===1?'':'s'}${total?` · Showing ${start+1}–${Math.min(start+PAGE_SIZE,total)}`:''}`;
  results.innerHTML='';
  if(!visible.length){results.innerHTML='<div class="empty">No matches found. Try another spelling, clear the search, or choose a different letter.</div>';pagination.innerHTML='';return;}
  visible.forEach(a=>{
@@ -64,5 +69,5 @@ function renderPagination(pages){
 fetch('data/articles.json').then(r=>{if(!r.ok)throw Error('Could not load index');return r.json();}).then(data=>{articles=Array.isArray(data)?data:[];renderAlphabet();render();}).catch(()=>{summary.textContent='Could not load the search index. Check that data/articles.json is present.';});
 q.addEventListener('input',()=>{currentPage=1;render();});
 sort.addEventListener('change',()=>{currentPage=1;render();});
-document.getElementById('clear').addEventListener('click',()=>{q.value='';currentPage=1;render();q.focus();});
-document.getElementById('all').addEventListener('click',()=>{selectedLetter='';currentPage=1;renderAlphabet();render();});
+document.getElementById('clear').addEventListener('click',()=>{q.value='';selectedLetter='';currentPage=1;renderAlphabet();render();q.focus();});
+document.getElementById('all').addEventListener('click',()=>{selectedLetter='';q.value='';currentPage=1;renderAlphabet();render();});
