@@ -41,12 +41,12 @@ function render(){
  let found=articles.filter(a=>{
   if(selectedLetter&&firstLetter(a)!==selectedLetter)return false;
   if(!term)return true;
-  return (a.title||'').toLocaleLowerCase().includes(term)||(a.text||'').toLocaleLowerCase().includes(term);
+  return (a.title||'').toLocaleLowerCase().includes(term);
  });
  found.sort((a,b)=>{const cmp=(a.title||'').localeCompare(b.title||'',undefined,{sensitivity:'base'});return sort.value==='title-desc'?-cmp:cmp;});
  const total=found.length; const pages=Math.max(1,Math.ceil(total/PAGE_SIZE)); currentPage=Math.min(currentPage,pages);
  const start=(currentPage-1)*PAGE_SIZE; const visible=found.slice(start,start+PAGE_SIZE);
- let descriptor=term?'matching document':selectedLetter?`title beginning with ${selectedLetter}`:'document';
+ let descriptor=term?'title match':selectedLetter?`title beginning with ${selectedLetter}`:'document';
  summary.textContent=`${total} ${descriptor}${total===1?'':'s'}${total?` · Showing ${start+1}–${Math.min(start+PAGE_SIZE,total)}`:''}`;
  results.innerHTML='';
  if(!visible.length){results.innerHTML='<div class="empty">No matches found. Try another spelling, clear the search, or choose a different letter.</div>';pagination.innerHTML='';return;}
@@ -54,7 +54,7 @@ function render(){
   const card=document.createElement('article');card.className='result';
   const h=document.createElement('h2');h.textContent=a.title||a.filename||'Untitled document';card.appendChild(h);
   const meta=document.createElement('div');meta.className='meta';const size=(Number(a.size_bytes||0)/1048576).toFixed(2);meta.textContent=`${a.pages||'?'} pages · ${size} MB${a.ocr_used?' · OCR text included':''}`;card.appendChild(meta);
-  const snippet=document.createElement('div');snippet.className='snippet';snippet.innerHTML=makeExcerpt(a,term);card.appendChild(snippet);
+  const snippet=document.createElement('div');snippet.className='snippet';snippet.innerHTML=makeExcerpt(a,'');card.appendChild(snippet);
   const actions=document.createElement('div');actions.className='actions';const link=document.createElement('a');link.href='pdf/'+String(a.filename||'').split('/').map(encodeURIComponent).join('/');link.target='_blank';link.rel='noopener';link.textContent='Open original PDF ↗';actions.appendChild(link);card.appendChild(actions);results.appendChild(card);
  });
  renderPagination(pages);
