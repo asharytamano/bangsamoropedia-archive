@@ -31,7 +31,7 @@
   <section class="search-panel" aria-labelledby="search-title">
     <label id="search-title" for="q">Search article titles and full text</label>
     <div class="search-row"><input id="q" type="search" placeholder="Try a name, place, institution or phrase…" autocomplete="off"><button id="clear" type="button">Clear</button></div>
-    <p class="hint">Enter a search term, or choose a letter below to begin browsing.</p>
+    <p class="hint"><strong>To search for a name or phrase, click CLEAR first</strong> to remove any previous letter or search filter. You can also start typing: the letter filter will clear automatically. Or choose a letter below to browse.</p>
   </section>
   <section class="browse-panel" aria-labelledby="browse-title">
     <div class="browse-heading"><h2 id="browse-title">Browse by first letter</h2><button id="all" class="text-button" type="button">Show all</button></div>
@@ -44,10 +44,11 @@
     </div>
     <section id="results" aria-live="polite"></section>
     <nav id="pagination" class="pagination" aria-label="Article result pages"></nav>
-    <div class="back-to-browse-wrap"><a class="back-to-browse" href="#browse-title">↑ Back to Top</a></div>
+    <div class="back-to-browse-wrap"><a id="back-to-browse" class="back-to-browse" href="#browse-title">↑ Back to Browse by Letter</a></div>
   </section>
   <footer><p>BangsamoroPedia Digital Heritage Archive. Preserved PDF copies are provided for discovery and reference. Search text is a discovery aid and may contain extraction errors.</p></footer>
 </main>
-<script src="app.js?v=3"></script>
+<a id="back-floating" class="back-floating" href="#browse-title" aria-label="Back to Browse by Letter">↑ Back to Browse by Letter</a>
+<script src="app.js?v=4"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@ let articles=[];
 const PAGE_SIZE=20;
 let selectedLetter='';
 let currentPage=1;
+let showAll=false;
 const q=document.getElementById('q');
 const results=document.getElementById('results');
 const archiveResults=document.getElementById('archive-results');
@@ -19,9 +20,9 @@ function renderAlphabet(){
   const b=document.createElement('button'); b.type='button'; b.className='letter'+(selectedLetter===letter?' active':'');
   b.textContent=letter; b.title=counts[letter]?`${counts[letter]} article${counts[letter]===1?'':'s'} beginning with ${letter}`:`No titles beginning with ${letter}`;
   b.disabled=!counts[letter]; b.setAttribute('aria-pressed',String(selectedLetter===letter));
-  b.addEventListener('click',()=>{selectedLetter=selectedLetter===letter?'':letter;currentPage=1;renderAlphabet();render();}); alphabet.appendChild(b);
+  b.addEventListener('click',()=>{q.value='';showAll=false;selectedLetter=selectedLetter===letter?'':letter;currentPage=1;renderAlphabet();render();if(selectedLetter){document.getElementById('archive-results').scrollIntoView({behavior:'smooth',block:'start'});}}); alphabet.appendChild(b);
  });
- if(counts['#']){const b=document.createElement('button');b.type='button';b.className='letter'+(selectedLetter==='#'?' active':'');b.textContent='#';b.title=`${counts['#']} titles with a non-letter first character`;b.setAttribute('aria-pressed',String(selectedLetter==='#'));b.addEventListener('click',()=>{selectedLetter=selectedLetter==='#'?'':'#';currentPage=1;renderAlphabet();render();});alphabet.appendChild(b);}
+ if(counts['#']){const b=document.createElement('button');b.type='button';b.className='letter'+(selectedLetter==='#'?' active':'');b.textContent='#';b.title=`${counts['#']} titles with a non-letter first character`;b.setAttribute('aria-pressed',String(selectedLetter==='#'));b.addEventListener('click',()=>{q.value='';showAll=false;selectedLetter=selectedLetter==='#'?'':'#';currentPage=1;renderAlphabet();render();if(selectedLetter){document.getElementById('archive-results').scrollIntoView({behavior:'smooth',block:'start'});}});alphabet.appendChild(b);}
 }
 function makeExcerpt(a,term){
  const raw=(a.text||'').replace(/\s+/g,' ').trim();
@@ -34,7 +35,7 @@ function makeExcerpt(a,term){
 }
 function render(){
  const term=q.value.trim().toLocaleLowerCase();
- const browsing=Boolean(term||selectedLetter);
+ const browsing=Boolean(term||selectedLetter||showAll);
  archiveResults.hidden=!browsing;
  welcome.hidden=browsing;
  let found=articles.filter(a=>{
@@ -67,7 +68,11 @@ function renderPagination(pages){
  addButton('Next →',Math.min(pages,currentPage+1),currentPage===pages);
 }
 fetch('data/articles.json').then(r=>{if(!r.ok)throw Error('Could not load index');return r.json();}).then(data=>{articles=Array.isArray(data)?data:[];renderAlphabet();render();}).catch(()=>{summary.textContent='Could not load the search index. Check that data/articles.json is present.';});
-q.addEventListener('input',()=>{currentPage=1;render();});
+q.addEventListener('input',()=>{currentPage=1; if(q.value.trim()){selectedLetter='';showAll=false;renderAlphabet();} render();});
 sort.addEventListener('change',()=>{currentPage=1;render();});
-document.getElementById('clear').addEventListener('click',()=>{q.value='';selectedLetter='';currentPage=1;renderAlphabet();render();q.focus();});
-document.getElementById('all').addEventListener('click',()=>{selectedLetter='';q.value='';currentPage=1;renderAlphabet();render();});
+document.getElementById('clear').addEventListener('click',()=>{q.value='';selectedLetter='';showAll=false;currentPage=1;renderAlphabet();render();q.focus();});
+document.getElementById('all').addEventListener('click',()=>{selectedLetter='';q.value='';showAll=true;currentPage=1;renderAlphabet();render();document.getElementById('archive-results').scrollIntoView({behavior:'smooth',block:'start'});});
+
+// Back-to-browse control always targets the letter navigation, not the page top.
+const backLink=document.getElementById('back-to-browse');
+if(backLink){backLink.addEventListener('click',event=>{event.preventDefault();document.getElementById('browse-title').scrollIntoView({behavior:'smooth',block:'start'});});}
