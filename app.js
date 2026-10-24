@@ -55,7 +55,7 @@ function render(){
   const h=document.createElement('h2');h.textContent=a.title||a.filename||'Untitled document';card.appendChild(h);
   const meta=document.createElement('div');meta.className='meta';const size=(Number(a.size_bytes||0)/1048576).toFixed(2);meta.textContent=`${a.pages||'?'} pages · ${size} MB${a.ocr_used?' · OCR text included':''}`;card.appendChild(meta);
   const snippet=document.createElement('div');snippet.className='snippet';snippet.innerHTML=makeExcerpt(a,'');card.appendChild(snippet);
-  const actions=document.createElement('div');actions.className='actions';const link=document.createElement('a');link.href='pdf/'+String(a.filename||'').split('/').map(encodeURIComponent).join('/');link.target='_blank';link.rel='noopener';link.textContent='Open original PDF ↗';actions.appendChild(link);card.appendChild(actions);results.appendChild(card);
+  const actions=document.createElement('div');actions.className='actions';const link=document.createElement('a');link.href='article.html?file='+encodeURIComponent(a.filename||'');link.target='_blank';link.rel='noopener';link.textContent='Read article with archive backlink ↗';actions.appendChild(link);card.appendChild(actions);results.appendChild(card);
  });
  renderPagination(pages);
 }
