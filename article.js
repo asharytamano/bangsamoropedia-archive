@@ -23,9 +23,22 @@
     document.title = title + ' | BangsamoroPedia';
     titleEl.textContent = title;
     content.innerHTML = '<iframe class="pdf-frame" title="PDF article: ' + escapeHtml(title) + '" src="' + pdfUrl + '"></iframe>' +
-      '<p class="viewer-note">If the PDF does not display in your browser, <a href="' + pdfUrl + '" target="_blank" rel="noopener">open the original PDF in a new tab</a>.</p>';
+      '<p class="viewer-note">If the PDF does not display in your browser, <a href="' + pdfUrl + '">open the original PDF in this tab</a>.</p>';
   }).catch(error => {
     titleEl.textContent = 'Article unavailable';
     content.innerHTML = '<div class="viewer-error">' + escapeHtml(error.message) + ' Please return to the archive and try another article.</div>';
   });
 })();
+
+
+// Return to the previous archive page when opened from the archive, preserving its search/filter state.
+document.querySelectorAll('.archive-back').forEach(link => {
+  link.addEventListener('click', event => {
+    try {
+      if (document.referrer && new URL(document.referrer).origin === window.location.origin) {
+        event.preventDefault();
+        window.history.back();
+      }
+    } catch (_) {}
+  });
+});

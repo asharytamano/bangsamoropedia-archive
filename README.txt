@@ -12,9 +12,9 @@ Install:
 5. After GitHub Pages deploys, hard-refresh the archive (Ctrl+F5).
 
 Expected behavior:
-- Archive article links open article.html in a new tab.
+- Archive article links open article.html in the same tab.
 - The PDF is embedded on the article page.
 - Back to Archive Search links are available above and below the PDF.
-- The original archive tab remains open so visitors can continue searching without losing their list.
+- The Back to Archive Search link returns to the previous archive page when possible, preserving the current search/filter state. Visitors will not accumulate extra tabs.
 
 Note: The viewer loads article metadata from data/articles.json and the PDF from pdf/ using the filename in the query string. Do not rename a PDF without regenerating the index.
