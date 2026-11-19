@@ -1,0 +1,44 @@
+How to add a new PDF article
+1. Prepare the PDF
+   
+   Save the finished wiki article as a PDF. Use a clear filename that identifies the subject, for example:
+   
+   Dimaporo, Abdullah.pdf
+2. Copy it into the archive
+   
+   Place the new PDF in:
+   
+   D:\GitHub\bangsamoropedia-archive\pdf
+   
+   Keep the original PDF in your own source folder too, if you want a separate backup.
+3. Regenerate the index
+   
+   Open PowerShell and run:
+   py D:\Downloads\build_bangsamoropedia_index.py
+   
+   
+   When prompted for the PDF source folder, enter:
+   
+   D:\GitHub\bangsamoropedia-archive\pdf
+   
+   When prompted for the repository folder, enter:
+   
+   D:\GitHub\bangsamoropedia-archive
+   
+   For the subfolder question, enter n.
+   
+   This rebuilds data/articles.json, including the new article's title, page count, file size, and extracted text.
+4. Check the result locally
+   
+   Confirm that the report says the expected number of PDFs and articles. Open data/articles.json and check that the new title appears.
+   
+   Since our public search is title-only, the new PDF becomes discoverable through its indexed title, not the full text inside the PDF.
+5. Commit and push
+   
+   Open GitHub Desktop. You should see the new PDF and the modified data/articles.json.
+   
+   Use a commit message such as:
+   
+   Add Abdullah Dimaporo article
+   
+   Then click Push origin.
